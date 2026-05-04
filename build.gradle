@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'net.neoforged.gradle.userdev' version '7.0.158'
+}
+
+base {
+    archivesName = "sillyloader"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "sillyLoader",
+            "Specification-Vendor": "FolderStudios",
+            "Specification-Version": "1",
+            "Implementation-Title": project.name,
+            "Implementation-Version": project.jar.archiveVersion,
+            "Implementation-Vendor": "FolderStudios"
+        ])
+    }
+}
