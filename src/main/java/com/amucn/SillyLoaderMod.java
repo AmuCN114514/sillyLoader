@@ -15,27 +15,41 @@ public class SillyLoaderMod {
     public static final String MOD_ID = "sillyloader";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     public static final String VERSION = "0.5.2-beta";
-    
+
+    /** 二级模组所在目录，相对于游戏工作目录。 */
+    public static final String SILLY_MODS_DIR = "sillymods";
+
     private static SillyModClassLoader modLoader;
 
     public SillyLoaderMod(IEventBus modEventBus) {
-        LOGGER.info("sillyLoader v{} initializing... (内测版，含有大量bug)", VERSION);
-        
+        LOGGER.info("sillyLoader v{} 初始化中...", VERSION);
+
         modEventBus.addListener(this::commonSetup);
+        Runtime.getRuntime().addShutdownHook(new Thread(SillyLoaderMod::shutdownLoader, "sillyLoader-shutdown"));
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("sillyLoader 正在加载傻傻模组...");
-        
+
         event.enqueueWork(() -> {
-            Path modsDir = Paths.get(".", "sillymods");
+            Path modsDir = Paths.get(".", SILLY_MODS_DIR);
             modLoader = new SillyModClassLoader(modsDir);
             modLoader.loadAllSillyMods();
-            
-            LOGGER.info("已加载 {} 个傻傻模组", modLoader.getLoadedModCount());
         });
     }
-    
+
+    /**
+     * 关闭加载器并释放所有二级模组的类加载器。
+     * 由 JVM shutdown hook 触发。
+     */
+    public static synchronized void shutdownLoader() {
+        if (modLoader == null) {
+            return;
+        }
+        modLoader.shutdown();
+        modLoader = null;
+    }
+
     public static SillyModClassLoader getModLoader() {
         return modLoader;
     }

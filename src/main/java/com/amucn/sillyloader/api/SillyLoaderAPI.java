@@ -1,34 +1,40 @@
 package com.amucn.sillyloader.api;
 
 import com.amucn.sillyloader.SillyLoaderMod;
+import com.amucn.sillyloader.loader.SillyModClassLoader;
 import com.amucn.sillyloader.loader.SillyModContainer;
-import java.util.List;
 
-public class SillyLoaderAPI {
-    
+import java.util.List;
+import java.util.Set;
+
+/**
+ * 供其它模组查询傻傻模组加载情况的只读接口。
+ */
+public final class SillyLoaderAPI {
+
+    private SillyLoaderAPI() {
+    }
+
     public static int getLoadedSillyModCount() {
-        if (SillyLoaderMod.getModLoader() == null) {
-            return 0;
-        }
-        return SillyLoaderMod.getModLoader().getLoadedModCount();
+        SillyModClassLoader loader = SillyLoaderMod.getModLoader();
+        return loader == null ? 0 : loader.getLoadedModCount();
     }
-    
+
     public static List<SillyModContainer> getAllSillyMods() {
-        if (SillyLoaderMod.getModLoader() == null) {
-            return List.of();
-        }
-        return SillyLoaderMod.getModLoader().getLoadedMods();
+        SillyModClassLoader loader = SillyLoaderMod.getModLoader();
+        return loader == null ? List.of() : loader.getLoadedMods();
     }
-    
+
+    public static Set<String> getLoadedSillyModNames() {
+        SillyModClassLoader loader = SillyLoaderMod.getModLoader();
+        return loader == null ? Set.of() : loader.getLoadedModNames();
+    }
+
     public static boolean isSillyModLoaded(String modName) {
-        return getAllSillyMods().stream()
-            .flatMap(container -> container.getModClasses().stream())
-            .anyMatch(clazz -> {
-                var annotation = clazz.getAnnotation(com.amucn.sillyloader.loader.SillyMod.class);
-                return annotation != null && annotation.name().equals(modName);
-            });
+        SillyModClassLoader loader = SillyLoaderMod.getModLoader();
+        return loader != null && loader.isModLoaded(modName);
     }
-    
+
     public static String getLoaderVersion() {
         return SillyLoaderMod.VERSION;
     }

@@ -8,10 +8,10 @@ version = "0.5.2-beta"
 displayName = "sillyLoader"
 logoFile = "sillyloader.png"
 description = '''
-内测mod加载器，含有大量bug
-测试版 - 请谨慎使用
+sillyLoader 是一个 NeoForge 二级模组加载器。
+把带有 @SillyMod 注解的 jar 放入游戏目录下的 ./sillymods/ 文件夹，即可在启动时动态加载，无需重新构建整合包。
 
-使用方法：将有 @SillyMod 注解的 jar 放入 ./sillymods/ 文件夹
+支持依赖解析与循环依赖检测、重名模组过滤、事件总线注册，以及退出时释放类加载器。
 '''
 authors = "AmuCN"
 

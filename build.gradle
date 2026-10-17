@@ -26,11 +26,11 @@ jar {
     manifest {
         attributes([
             "Specification-Title": "sillyLoader",
-            "Specification-Vendor": "FolderStudios",
+            "Specification-Vendor": "AmuCN",
             "Specification-Version": "1",
             "Implementation-Title": project.name,
             "Implementation-Version": project.jar.archiveVersion,
-            "Implementation-Vendor": "FolderStudios"
+            "Implementation-Vendor": "AmuCN"
         ])
     }
 }
